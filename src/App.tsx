@@ -3,7 +3,7 @@ import { GameHubUI } from './components/GameHubUI';
 import { GameView } from './components/GameView';
 import { SoundProvider } from './context/SoundContext';
 
-export type GameType = 'none' | 'runner' | 'shooter' | 'driving' | 'retro-all';
+export type GameType = 'none' | 'runner' | 'shooter' | 'driving' | 'gamepro' | 'retro-all';
 
 export default function App() {
   const [activeGame, setActiveGame] = useState<GameType>('none');

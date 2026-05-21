@@ -6,6 +6,7 @@ import { useSound } from '../context/SoundContext';
 import { createRunnerGame } from '../games/RunnerGame';
 import { createShooterGame } from '../games/ShooterGame';
 import { createDrivingGame } from '../games/DrivingGame';
+import { createGamePro } from '../games/GamePro';
 import { setHighScore } from '../utils/storage';
 
 interface Props {
@@ -56,6 +57,9 @@ export const GameView: React.FC<Props> = ({ gameId, onBack }) => {
           case 'driving':
             config = createDrivingGame(container, { onGameOver: (s) => handleGameOver(s, 'driving'), onScore: setScore1, playSfx });
             break;
+          case 'gamepro':
+            config = createGamePro(container, { onGameOver: (s) => handleGameOver(s, 'gamepro'), onScore: setScore1, playSfx });
+            break;
           default:
             return;
         }
@@ -95,6 +99,7 @@ export const GameView: React.FC<Props> = ({ gameId, onBack }) => {
 
   return (
     <div className="relative h-screen flex flex-col overflow-hidden bg-black">
+      {/* HUD Overlay */}
       <div className="absolute top-0 left-0 right-0 z-20 p-4 md:p-6 flex justify-between items-center pointer-events-none">
         <div className="flex items-center gap-4 pointer-events-auto">
           <button 
@@ -131,6 +136,7 @@ export const GameView: React.FC<Props> = ({ gameId, onBack }) => {
         </div>
       </div>
 
+      {/* Game Canvas Container(s) */}
       <div className={`flex-1 w-full flex ${gameId === 'retro-all' ? 'flex-col md:flex-row' : ''}`}>
         <div ref={containerRef1} className="flex-1 w-full h-full border-r border-white/5" />
         {gameId === 'retro-all' && (
@@ -138,24 +144,19 @@ export const GameView: React.FC<Props> = ({ gameId, onBack }) => {
         )}
       </div>
 
+      {/* Game Over Modal */}
       {isGameOver && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-slate-900 border border-indigo-500/50 rounded-[2.5rem] p-10 max-w-sm w-full text-center shadow-[0_0_50px_rgba(99,102,241,0.2)]">
             <div className="w-20 h-20 bg-indigo-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-indigo-500/40">
               <Trophy size={40} className="text-white" />
             </div>
-            <h2 className="text-4xl font-black mb-1 uppercase italic tracking-tighter">Session Over</h2>
-            <p className="text-indigo-400 uppercase tracking-widest text-[10px] font-black mb-8 italic">New Score Recorded</p>
+            <h2 className="text-4xl font-black mb-1 uppercase italic tracking-tighter">Pro Defeated</h2>
+            <p className="text-indigo-400 uppercase tracking-widest text-[10px] font-black mb-8 italic">Score Authenticated</p>
             
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700">
-                <span className="text-slate-500 text-[10px] font-black uppercase block mb-1">Current</span>
-                <span className="text-xl font-black text-white">{score1}</span>
-              </div>
-              <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700">
-                <span className="text-slate-500 text-[10px] font-black uppercase block mb-1">Bonus</span>
-                <span className="text-xl font-black text-white">{gameId === 'retro-all' ? score2 : '0'}</span>
-              </div>
+            <div className="bg-slate-800/50 rounded-2xl p-4 mb-8 border border-slate-700">
+              <span className="text-slate-500 text-[10px] font-black uppercase block mb-1">Total Score</span>
+              <span className="text-3xl font-black text-white">{score1}</span>
             </div>
             
             <div className="flex flex-col gap-3">
@@ -177,9 +178,10 @@ export const GameView: React.FC<Props> = ({ gameId, onBack }) => {
         </div>
       )}
 
+      {/* Touch Controls Helper */}
       <div className="absolute bottom-6 left-0 right-0 flex justify-center pointer-events-none">
         <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest bg-black/40 px-6 py-2 rounded-full border border-white/5 backdrop-blur-sm">
-          {gameId === 'runner' ? 'TAP TO JUMP' : gameId === 'shooter' ? 'DRAG TO MOVE • TAP TO SHOOT' : gameId === 'driving' ? 'DRAG TO STEER • AVOID TRAFFIC' : 'SIMULTANEOUS RETRO CHALLENGE'}
+          {gameId === 'runner' ? 'TAP TO JUMP' : gameId === 'shooter' ? 'DRAG TO MOVE • TAP TO SHOOT' : gameId === 'driving' ? 'DRAG TO STEER • AVOID TRAFFIC' : gameId === 'gamepro' ? 'CURSOR FOLLOWS • CLICK TO BLAST' : 'SIMULTANEOUS RETRO CHALLENGE'}
         </p>
       </div>
     </div>

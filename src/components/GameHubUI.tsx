@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Gamepad2, Zap, Rocket, Volume2, VolumeX, Search, 
-  Trophy, User, Star, Filter, Heart, Play, Car
+  Trophy, User, Star, Filter, Heart, Play, Car, Shield
 } from 'lucide-react';
 import { GameType } from '../App';
 import { useSound } from '../context/SoundContext';
@@ -12,7 +12,7 @@ interface Props {
   onSelectGame: (game: GameType) => void;
 }
 
-const CATEGORIES = ['All', 'Action', 'Arcade', 'Retro', 'Racing'];
+const CATEGORIES = ['All', 'Action', 'Arcade', 'Retro', 'Racing', 'Pro'];
 
 const GAMES = [
   {
@@ -44,6 +44,16 @@ const GAMES = [
     category: 'Racing',
     rating: 4.7,
     players: '5.2K'
+  },
+  {
+    id: 'gamepro' as GameType,
+    title: 'Game Pro',
+    description: 'Elite strategic defense. Protect the central hub from incoming geometric waves.',
+    icon: Shield,
+    color: 'from-emerald-500 to-teal-600',
+    category: 'Pro',
+    rating: 5.0,
+    players: '1.2M'
   }
 ];
 
@@ -79,7 +89,7 @@ export const GameHubUI: React.FC<Props> = ({ onSelectGame }) => {
                 Game<span className="text-indigo-500">Hub</span>
               </h1>
               <span className="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] font-black text-indigo-400 uppercase tracking-tighter">
-                v2.1
+                v2.5
               </span>
             </div>
             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">
@@ -159,22 +169,9 @@ export const GameHubUI: React.FC<Props> = ({ onSelectGame }) => {
 
         <div className="lg:col-span-9">
           <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <h2 className="text-2xl font-black italic uppercase tracking-tight">
-                {activeCategory} <span className="text-indigo-500">Games</span>
-              </h2>
-              {activeCategory === 'Retro' && (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleSelect('retro-all')}
-                  className="px-4 py-1.5 bg-gradient-to-r from-pink-500 to-indigo-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg shadow-pink-500/20 flex items-center gap-2"
-                >
-                  <Play size={12} fill="currentColor" />
-                  Launch All Retro
-                </motion.button>
-              )}
-            </div>
+            <h2 className="text-2xl font-black italic uppercase tracking-tight">
+              {activeCategory} <span className="text-indigo-500">Games</span>
+            </h2>
             <div className="text-slate-500 text-xs font-bold">
               SHOWING {filteredGames.length} OF {GAMES.length}
             </div>
@@ -199,20 +196,15 @@ export const GameHubUI: React.FC<Props> = ({ onSelectGame }) => {
                       <div className="absolute inset-0 flex items-center justify-center">
                         <game.icon size={64} className="text-white/20 group-hover:scale-110 transition-transform duration-500" />
                       </div>
-                      <div className="absolute top-4 right-4 flex gap-2">
-                        <div className="bg-black/40 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1">
-                          <Star size={10} className="text-yellow-400 fill-yellow-400" />
-                          <span className="text-[10px] font-black">{game.rating}</span>
-                        </div>
-                      </div>
                     </div>
 
                     <div className="p-6 flex flex-col flex-1">
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="text-xl font-bold group-hover:text-indigo-400 transition-colors">{game.title}</h3>
-                        <button className="text-slate-600 hover:text-pink-500 transition-colors">
-                          <Heart size={18} />
-                        </button>
+                        <div className="bg-black/40 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1">
+                          <Star size={10} className="text-yellow-400 fill-yellow-400" />
+                          <span className="text-[10px] font-black">{game.rating}</span>
+                        </div>
                       </div>
                       
                       <p className="text-slate-400 text-sm mb-6 line-clamp-2">
@@ -236,16 +228,6 @@ export const GameHubUI: React.FC<Props> = ({ onSelectGame }) => {
                 </motion.div>
               ))}
             </AnimatePresence>
-            
-            {filteredGames.length < 4 && (
-              <div className="border-2 border-dashed border-slate-800 rounded-3xl flex flex-col items-center justify-center p-8 text-center bg-slate-900/20">
-                <div className="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center mb-4 text-slate-600">
-                  <Gamepad2 size={24} />
-                </div>
-                <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest">More Coming Soon</h4>
-                <p className="text-slate-600 text-xs mt-1 px-4">Our developers are crafting {50 - GAMES.length}+ new experiences.</p>
-              </div>
-            )}
           </div>
         </div>
       </main>
